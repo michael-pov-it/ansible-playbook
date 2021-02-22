@@ -6,10 +6,16 @@
   vars:
     source_file: ./www/index.html
     destin_file: /var/www/html
+    owner      : Mike_Gordievsky
 
   tasks:
   - name: Install Apache Web Server
     yum : name=httpd state=latest
+
+  - name: Print the IP for each host when defined
+    ansible.builtin.debug:
+      msg: System {{ inventory_hostname }} has public IP address {{ ansible_default_ipv4.address }}
+    when: ansible_default_ipv4.address is defined
 
   - name  : Copying a web-page from source to destination //$destin_file location
     copy  : src={{ vars.source_file }} dest={{ vars.destin_file }} mode=0555
